@@ -1,0 +1,11 @@
+ - Setup uWSGI
+   * https://docs.djangoproject.com/en/1.10/howto/deployment/wsgi/uwsgi/
+ - Setup PostgreSQL
+   * https://docs.djangoproject.com/en/1.10/ref/databases/#postgresql-notes
+   * Figure out how / where to setup PostgreSQL server
+ - Django Configurations
+   * ???
+   * https://docs.djangoproject.com/en/1.10/topics/install/
+ - Setup nginx?
+   * http://nginx.org/
+ - Figure out deployment -- either vagrant, or Docker container, or something
