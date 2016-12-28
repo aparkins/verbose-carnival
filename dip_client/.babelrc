@@ -1,0 +1,44 @@
+{
+  env: {
+  // TODO disabled for now because IE11 doesn't support symbol
+  //   production: {
+  //     plugins: [
+  //       "transform-react-inline-elements",
+  //       "transform-react-constant-elements"
+  //     ],
+  //   }
+  },
+  plugins: [
+    'syntax-jsx',
+    'transform-react-jsx',
+    'transform-react-display-name',
+  ],
+  presets: [
+    ['env', {
+      useBuiltIns: true,
+      modules: false,
+      targets: {
+        browsers: [
+          'last 2 versions',
+          // Only supporting IE11 as a "cheat" to compile to ES2015 because
+          // Uglify does not support ES2016.
+          // TRACKED: https://github.com/mishoo/UglifyJS2/issues/448
+          'not ie < 11',
+          'not ie_mob <= 11'
+        ],
+      },
+      exclude: [
+        // 2015
+        'transform-es2015-block-scoped-functions',
+        'transform-es2015-for-of',
+        'transform-es2015-object-super',
+        'transform-es2015-sticky-regex',
+        'transform-es2015-typeof-symbol',
+        'transform-es2015-unicode-regex',
+        'transform-regenerator',
+        // 2017
+        'transform-async-to-generator',
+      ],
+    }]
+  ]
+}
