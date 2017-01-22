@@ -1,4 +1,4 @@
 Django==1.10.4
 psycopg2==2.6.2
 uWSGI==2.0.14
-pydip==0.1.5
+pydip==0.1.6
