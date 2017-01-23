@@ -1,4 +1,5 @@
 from dip_platform.api.generic_view import GenericView
+from dip_platform.logic.game import game_logic
 from dip_platform.management.game import game_management
 from dip_platform.management.game import player_management
 
@@ -19,6 +20,7 @@ class GameView(GenericView):
         status = 200
         payload = {
             'id': game['id'],
+            'currentTurn': game_logic.get_readable_turn(game['current_turn']),
             'players': [{
                 'id':   player['id'],
                 'name': player['name'],
