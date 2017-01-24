@@ -73,6 +73,10 @@ def _handle_exception(e):
         status = 404
         payload = None
         headers = { ERROR_MESSAGE_HEADER: str(e) }
+    elif isinstance(e, exceptions.BadRequestError):
+        status = 400
+        payload = None
+        headers = { ERROR_MESSAGE_HEADER: str(e) }
     else:
         raise e
 
