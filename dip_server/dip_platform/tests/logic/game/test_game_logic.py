@@ -3,30 +3,34 @@ import pytest
 from dip_platform.logic.game import game_logic
 
 
-def test__get_readable_turn__negative_is_error():
+def test__get_turn_data__negative_is_error():
     with pytest.raises(AssertionError):
-        game_logic.get_readable_turn(-1)
+        game_logic.get_turn_data(-1)
 
 
 @pytest.mark.parametrize(
-    [ 'turn_number', 'expected' ],
+    [ 'turn_number', 'expected_year', 'expected_season', 'expected_phase' ],
     [
-        (  0, 'Registration'),
-        (  1, 'Spring 1901'),
-        (  2, 'Spring 1901 (Retreat)'),
-        (  3, 'Fall 1901'),
-        (  4, 'Fall 1901 (Retreat)'),
-        (  5, 'Fall 1901 (Adjustment)'),
-        (  6, 'Spring 1902'),
-        (  7, 'Spring 1902 (Retreat)'),
-        (  8, 'Fall 1902'),
-        (  9, 'Fall 1902 (Retreat)'),
-        ( 10, 'Fall 1902 (Adjustment)'),
-        (100, 'Fall 1920 (Adjustment)'),
-        (156, 'Spring 1932'),
-        (257, 'Spring 1952 (Retreat)'),
-        (445, 'Fall 1989 (Adjustment)'),
+        (  0, None, None,                     game_logic.PHASE_REGISTRATION),
+        (  1, 1901, game_logic.SEASON_SPRING, game_logic.PHASE_MOVEMENT),
+        (  2, 1901, game_logic.SEASON_SPRING, game_logic.PHASE_RETREAT),
+        (  3, 1901, game_logic.SEASON_FALL,   game_logic.PHASE_MOVEMENT),
+        (  4, 1901, game_logic.SEASON_FALL,   game_logic.PHASE_RETREAT),
+        (  5, 1901, game_logic.SEASON_FALL,   game_logic.PHASE_ADJUSTMENT),
+        (  6, 1902, game_logic.SEASON_SPRING, game_logic.PHASE_MOVEMENT),
+        (  7, 1902, game_logic.SEASON_SPRING, game_logic.PHASE_RETREAT),
+        (  8, 1902, game_logic.SEASON_FALL,   game_logic.PHASE_MOVEMENT),
+        (  9, 1902, game_logic.SEASON_FALL,   game_logic.PHASE_RETREAT),
+        ( 10, 1902, game_logic.SEASON_FALL,   game_logic.PHASE_ADJUSTMENT),
+        (100, 1920, game_logic.SEASON_FALL,   game_logic.PHASE_ADJUSTMENT),
+        (156, 1932, game_logic.SEASON_SPRING, game_logic.PHASE_MOVEMENT),
+        (257, 1952, game_logic.SEASON_SPRING, game_logic.PHASE_RETREAT),
+        (445, 1989, game_logic.SEASON_FALL,   game_logic.PHASE_ADJUSTMENT),
     ],
 )
-def test__get_readable_turn__valid_turns(turn_number, expected):
-    assert game_logic.get_readable_turn(turn_number) == expected
+def test__get_turn_data__valid_turns(turn_number, expected_year, expected_season, expected_phase):
+    assert game_logic.get_turn_data(turn_number) == {
+        'year'   : expected_year,
+        'season' : expected_season,
+        'phase'  : expected_phase,
+    }
