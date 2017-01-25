@@ -4,10 +4,14 @@ from django.db import models
 class Game(models.Model):
     # SETTINGS! :D
 
+    current_turn = models.IntegerField(default=0)
+
     def to_dict(self):
         return {
             'id': self.id,
+            'current_turn': self.current_turn,
         }
+
 
 class User(models.Model):
     username = models.CharField(max_length=32)
@@ -19,6 +23,7 @@ class User(models.Model):
             'username': self.username,
             'email':    self.email,
         }
+
 
 class Player(models.Model):
     game = models.ForeignKey(Game, on_delete=models.DO_NOTHING)
@@ -32,6 +37,7 @@ class Player(models.Model):
             'user_id': self.user_id,
             'name':    self.name,
         }
+
 
 class Unit(models.Model):
     UNIT_TYPE_CHOICES = (
@@ -56,6 +62,7 @@ class Unit(models.Model):
             'type':           self.readable_type(),
             'territory_name': self.territory_name,
         }
+
 
 class TerritoryOwnership(models.Model):
     owner = models.ForeignKey(Player, on_delete=models.DO_NOTHING)
