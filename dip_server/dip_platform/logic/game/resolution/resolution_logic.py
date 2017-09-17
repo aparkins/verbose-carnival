@@ -50,4 +50,22 @@ def resolve_retreat(player_state, turn):
 
 
 def resolve_adjustment(player_state, turn):
-    pass
+    owned_territories = transform_logic.build_owned_territories(player_state)
+    ownership_map = OwnershipMap(
+        vanilla_dip.generate_supply_center_map(),
+        owned_territories,
+        vanilla_dip.generate_home_territories(),
+    )
+
+    player_units = transform_logic.build_pydip_player_units(player_state)
+    _, adjustment_counts = adjustment.calculate_adjustments(ownership_map, player_units)
+    commands = transform_logic.build_pydip_adjustment_commands(ownership_map, player_state)
+
+    new_player_units = adjustment.resolve_adjustment__validated(
+        ownership_map,
+        adjustment_counts,
+        player_units,
+        commands,
+    )
+
+    return transform_logic.destructure_pydip_adjustment_results(new_player_units)
