@@ -1,3 +1,4 @@
+import json
 from django.http import HttpResponse
 from django.http import JsonResponse
 from django.views import View
@@ -33,13 +34,16 @@ class GenericView(View, metaclass=GenericViewMeta):
         return _build_response(self.handle_get, request, *args, **kwargs)
 
     def post(self, request, *args, **kwargs):
-        return _build_response(self.handle_post, request, *args, **kwargs)
+        data = json.loads(request.body.decode("utf-8"))
+        return _build_response(self.handle_post, request, data, *args, **kwargs)
 
     def put(self, request, *args, **kwargs):
-        return _build_response(self.handle_put, request, *args, **kwargs)
+        data = json.loads(request.body.decode("utf-8"))
+        return _build_response(self.handle_put, request, data, *args, **kwargs)
 
     def patch(self, request, *args, **kwargs):
-        return _build_response(self.handle_patch, request, *args, **kwargs)
+        data = json.loads(request.body.decode("utf-8"))
+        return _build_response(self.handle_patch, request, data, *args, **kwargs)
 
     def delete(self, request, *args, **kwargs):
         return _build_response(self.handle_delete, request, *args, **kwargs)
