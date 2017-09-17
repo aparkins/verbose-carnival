@@ -1,8 +1,10 @@
+from pydip.player.command.adjustment_command import AdjustmentDisbandCommand, AdjustmentCreateCommand
 from pydip.player.command.retreat_command import RetreatMoveCommand, RetreatDisbandCommand
 from pydip.player.player import Player
 from pydip.player.command.command import HoldCommand, MoveCommand, SupportCommand, ConvoyTransportCommand, ConvoyMoveCommand
+from pydip.player.unit import Unit
 
-from dip_platform.constants.enums import UnitType, MovementCommandType, RetreatCommandType
+from dip_platform.constants.enums import UnitType, MovementCommandType, RetreatCommandType, AdjustmentCommandType
 
 
 def build_pydip_movement_commands(game_map, player_state):
@@ -10,6 +12,24 @@ def build_pydip_movement_commands(game_map, player_state):
     unit_map = __build_unit_map(player_map)
     return [
         build_pydip_movement_command(player_map[player['name']], unit_map, command)
+        for player in player_state
+        for command in player['commands']
+    ]
+
+def build_pydip_retreat_commands(game_map, retreat_map, player_state):
+    player_map = __build_player_map(game_map, player_state)
+    unit_map = __build_unit_map(player_map)
+    return [
+        build_pydip_retreat_command(retreat_map, player_map[player['name']], unit_map, command)
+        for player in player_state
+        for command in player['commands']
+    ]
+
+def build_pydip_adjustment_commands(ownership_map, player_state):
+    player_map = __build_player_map(ownership_map.supply_map.game_map, player_state)
+    unit_map = __build_unit_map(player_map)
+    return [
+        build_pydip_adjustment_command(ownership_map, player_map[player['name']], unit_map, command)
         for player in player_state
         for command in player['commands']
     ]
@@ -37,14 +57,18 @@ def build_pydip_retreat_map(game_map, player_state):
 
     return results
 
-def build_pydip_retreat_commands(game_map, retreat_map, player_state):
-    player_map = __build_player_map(game_map, player_state)
-    unit_map = __build_unit_map(player_map)
-    return [
-        build_pydip_retreat_command(retreat_map, player_map[player['name']], unit_map, command)
-        for player in player_state
-        for command in player['commands']
-    ]
+
+def build_pydip_player_units(player_state):
+    result = dict()
+    for player in player_state:
+        player_name = player['name']
+        result[player_name] = set()
+
+        for unit_data in player['units']:
+            unit_type = UnitType(unit_data['type']).to_pydip()
+            result[player_name].add(Unit(unit_type, unit_data['territory']))
+
+    return result
 
 
 def __build_player_map(game_map, player_state):
@@ -169,6 +193,38 @@ def build_pydip_retreat_command(retreat_map, player, unit_map, command_data):
     raise ValueError
 
 
+def build_pydip_adjustment_command(ownership_map, player, unit_map, command_data):
+    """
+    ownership_map -- PyDip OwnershipMap representing current owned territories
+    player -- PyDip Player issuing the command
+    unit_map -- Territory Name to PyDip Unit object in that territory
+    command_data -- {
+        type -- Type of command being issued (dictates other parameters)
+        territory -- Name of territory being issued command
+    }
+    """
+    command_type = AdjustmentCommandType(command_data['type'])
+
+    if command_type == AdjustmentCommandType.DISBAND:
+        commanded_unit = unit_map[command_data['territory']]
+        return AdjustmentDisbandCommand(
+            player,
+            commanded_unit,
+        )
+
+    if command_type == AdjustmentCommandType.CREATE:
+        return AdjustmentCreateCommand(
+            ownership_map,
+            player,
+            Unit(
+                UnitType(command_data['unitType']).to_pydip(),
+                command_data['territory'],
+            ),
+        )
+
+    raise ValueError
+
+
 def destructure_pydip_movement_results(retreats):
     result = dict()
     for player, unit_retreats in retreats.items():
@@ -207,5 +263,19 @@ def destructure_pydip_retreat_results(player_units, ownership_map, adjustment_co
         result[player]['territories'] = list(ownership_map.owned_territories.get(player, set()))
 
         result[player]['adjustments'] = adjustment_counts.get(player, 0)
+
+    return result
+
+
+def destructure_pydip_adjustment_results(player_units):
+    result = dict()
+    for player in player_units.keys():
+        result[player] = dict()
+
+        result[player]['units'] = dict()
+        for unit in player_units.get(player, []):
+            result[player]['units'][unit.position] = {
+                'type' : UnitType.from_pydip(unit.unit_type).value,
+            }
 
     return result

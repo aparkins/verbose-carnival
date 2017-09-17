@@ -24,15 +24,20 @@ class UnitType(Enum):
 
 
 class MovementCommandType(Enum):
-    HOLD = 'hold'
-    MOVE = 'move'
-    SUPPORT = 'support'
+    HOLD             = 'hold'
+    MOVE             = 'move'
+    SUPPORT          = 'support'
     CONVOY_TRANSPORT = 'convoyTransport'
-    CONVOY_MOVE = 'convoyMove'
+    CONVOY_MOVE      = 'convoyMove'
 
 
 class RetreatCommandType(Enum):
     RETREAT = 'retreat'
+    DISBAND = 'disband'
+
+
+class AdjustmentCommandType(Enum):
+    CREATE  = 'create'
     DISBAND = 'disband'
 
 

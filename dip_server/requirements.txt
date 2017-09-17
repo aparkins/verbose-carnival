@@ -1,6 +1,6 @@
 Django==1.10.4
 psycopg2==2.6.2
 py==1.4.32
-pydip==0.1.7
+pydip==0.1.8
 pytest==3.0.6
 uWSGI==2.0.14
