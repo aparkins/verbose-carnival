@@ -201,6 +201,7 @@ def build_pydip_adjustment_command(ownership_map, player, unit_map, command_data
     command_data -- {
         type -- Type of command being issued (dictates other parameters)
         territory -- Name of territory being issued command
+        [unitType] -- (Create command only) Type of unit to create at the specified territory
     }
     """
     command_type = AdjustmentCommandType(command_data['type'])
