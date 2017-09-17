@@ -23,7 +23,26 @@ class UnitType(Enum):
         raise ValueError
 
 
+class MovementCommandType(Enum):
+    HOLD = 'hold'
+    MOVE = 'move'
+    SUPPORT = 'support'
+    CONVOY_TRANSPORT = 'convoyTransport'
+    CONVOY_MOVE = 'convoyMove'
+
+
+class RetreatCommandType(Enum):
+    RETREAT = 'retreat'
+    DISBAND = 'disband'
+
+
+class TurnSeason(Enum):
+    SPRING = 'spring'
+    FALL   = 'fall'
+    WINTER = 'winter'
+
+
 class TurnPhase(Enum):
-    MOVEMENT   = 'move'
+    MOVEMENT   = 'movement'
     RETREAT    = 'retreat'
     ADJUSTMENT = 'adjustment'
