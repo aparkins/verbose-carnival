@@ -2,3 +2,5 @@ venv
 .idea/
 *.pyc
 .cache/
+docker-build
+docker-run

@@ -1,0 +1,9 @@
+docker run \
+    -e PGDATABASE="TODO" \
+    -e PGUSER="TODO" \
+    -e PGPASSWORD="TODO" \
+    -e PGHOST="TODO" \
+    -e PGPORT="TODO" \
+-it -p 8000:8000 \
+pydip:latest \
+bash
